@@ -1,0 +1,59 @@
+package lab9;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class exJDBC {
+    public static void main(String[] args) throws ClassNotFoundException {
+
+        //step1
+        Class.forName("org.sqlite.JDBC");
+        //step2
+        String SQCONN = "jdbc:sqlite:Teat.sqlite";
+        try {
+            Connection conn = DriverManager.getConnection(SQCONN);
+            if ( conn == null){
+                System.out.println("Could not connet to DB");
+            }
+            else {
+                System.out.println("Connected to Data Database.");
+            }
+
+            //step3
+            Statement stmt = conn.createStatement();
+            String sql ="select* from user";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            //step4
+            ArrayList <User> myList = new ArrayList<>();
+            while (rs.next()){
+
+//                System.out.println("id"+rs.getString(1));
+//                System.out.println("name"+rs.getString(2));
+//                System.out.println("address"+rs.getString(3));
+//                System.out.println("tel"+rs.getString(4));
+//                System.out.println("-----------------------");
+
+                User myUser = new User(rs.getString(1), rs.getString(2),rs.getString(3),rs.getString(4));
+                myList.add(myUser);
+
+
+            }//while
+            for (User u: myList){
+                System.out.println(u.toString());
+            }
+            //step5
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+
+
+    }//main
+}//class
